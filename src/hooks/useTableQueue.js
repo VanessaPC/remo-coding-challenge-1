@@ -7,34 +7,10 @@ const TABLE = {
 
 const MAX_TABLE_SIZE = 6;
 
-// good to have
-// create a room at start
-
-const ROOM = [
-  { users: [], TABLE: 1 },
-  { users: [], TABLE: 2 },
-  { users: [], TABLE: 3 },
-  { users: [], TABLE: 4 },
-  { users: [], TABLE: 5 },
-  { users: [], TABLE: 6 },
-  { users: [], TABLE: 7 },
-  { users: [], TABLE: 8 },
-  { users: [], TABLE: 9 },
-  { users: [], TABLE: 10 },
-];
-
-// if first table isn't empty, re set the room and find emptiest
 const getNextTable = (tables) => tables.shift();
 
-// find first empty seat,
-// start countint from there
-// if it's the first one, use it
-// if the seat is odd, the next odd
-// if its even then the even one
-// if there's non available then we spill onto evens as well
-
-export const useTableQueue = () => {
-  const [room, setRoom] = useState(ROOM);
+export const useTableQueue = (initialRoom) => {
+  const [room, setRoom] = useState(initialRoom);
 
   const assignSeat = (userId, table) => {
     if (table.users.length === MAX_TABLE_SIZE) {
@@ -45,8 +21,12 @@ export const useTableQueue = () => {
 
     if (table.users.length >= 2) {
       setRoom([...room, table]);
+
+      return [...room, table];
     } else {
       setRoom([table, ...room]);
+
+      return [table, ...room];
     }
   };
 
@@ -91,15 +71,25 @@ export const useTableQueue = () => {
     switch (action) {
       case TABLE.ADD:
         const table = getNextTable(room);
-        assignSeat(userID, table);
-        break;
+        const updatedRoom = assignSeat(userID, table);
+
+        return {
+          tableId: table.TABLE,
+          room: updatedRoom,
+        };
 
       case TABLE.MOVE:
         moveUser(parseFloat(userID), tableId, newTableId);
-        break;
+        return {
+          tableId: table.TABLE,
+          room,
+        };
 
       default:
-        return null;
+        return {
+          tableId: table.TABLE,
+          room,
+        };
     }
   };
   return { tableActions };

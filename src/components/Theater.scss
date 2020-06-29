@@ -1,6 +1,6 @@
-.remo-theater{
+.remo-theater {
   margin-left: -378px;
-  margin-top: -300px;
+  margin-top: -250px;
 
   .rt-app-bar {
     text-align: right;
@@ -9,6 +9,10 @@
     z-index: 1;
     width: 100%;
     box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 250px;
+    margin-left: 378px;
   }
 
   .rt-rooms {
